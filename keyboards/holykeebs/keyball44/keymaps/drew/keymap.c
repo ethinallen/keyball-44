@@ -20,6 +20,16 @@ static bool mouse_layer_enabled = true;
 static int16_t mouse_accu_x = 0;
 static int16_t mouse_accu_y = 0;
 
+// Soft-compress a scroll value: below threshold passes through 1:1,
+// above threshold the excess is divided by SCROLL_CLAMP_DIVISOR.
+static inline int16_t soft_clamp_scroll(int16_t v) {
+    if (v == 0) return 0;
+    int16_t sign  = v > 0 ? 1 : -1;
+    int16_t abs_v = v > 0 ? v : -v;
+    if (abs_v <= SCROLL_CLAMP_THRESHOLD) return v;
+    return sign * (SCROLL_CLAMP_THRESHOLD + (abs_v - SCROLL_CLAMP_THRESHOLD) / SCROLL_CLAMP_DIVISOR);
+}
+
 // Called by the holykeebs userspace after it processes the combined mouse
 // report.  We accumulate movement and only activate the mouse layer once the
 // total exceeds MOUSE_LAYER_THRESHOLD, matching QMK's AML behaviour.
@@ -33,6 +43,11 @@ report_mouse_t pointing_device_task_combined_keymap(report_mouse_t report) {
             mouse_accu_y = 0;
         }
     }
+    // Soft-compress scroll output to tame OS acceleration on fast flicks
+    // while leaving slow/medium scrolling unchanged.
+    report.h = soft_clamp_scroll(report.h);
+    report.v = soft_clamp_scroll(report.v);
+
     return report;
 }
 
@@ -50,6 +65,8 @@ static bool is_mouse_or_pass_key(uint16_t keycode) {
     // Our own exit / toggle keys
     if (keycode == MSE_OFF || keycode == MSE_TOG) return true;
     if (keycode == KC_NO || keycode == XXXXXXX)   return true;
+    // Sniping keys on Layer 1 — keep mouse layer active while adjusting precision
+    if (keycode == HK_S_MODE || keycode == HK_S_MODE_T) return true;
     // Navigation / editing keys explicitly mapped on Layer 1
     if (keycode == KC_UP || keycode == KC_DOWN || keycode == KC_LEFT || keycode == KC_RIGHT) return true;
     if (keycode == KC_PGUP || keycode == KC_PGDN) return true;
@@ -101,7 +118,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
   [1] = LAYOUT_universal(
     _______     ,  KC_F1   , KC_F2    , KC_F3   , KC_F4    , KC_F5    ,                                         KC_F6    , KC_F7    , KC_F8    , KC_F9    , KC_F10   , KC_F11   ,
     _______     ,  _______ , _______  , KC_UP   , KC_ENT   , KC_DEL   ,                                         KC_PGUP  , MS_BTN1  , KC_UP    , MS_BTN2  , MS_BTN3  , KC_F12   ,
-    _______     ,  _______ , KC_LEFT  , KC_DOWN , KC_RGHT  , KC_BSPC  ,                                         KC_PGDN  , KC_LEFT  , KC_DOWN  , KC_RGHT  , _______  , _______  ,
+    _______     ,  _______ , KC_LEFT  , KC_DOWN , KC_RGHT  , KC_BSPC  ,                                         KC_PGDN  , KC_LEFT  , KC_DOWN  , KC_RGHT  , HK_S_MODE_T, HK_S_MODE,
                   _______  , _______  , _______  ,         MSE_OFF  , _______  ,                   _______  , _______  , _______       , _______  , _______
   ),
 
@@ -122,6 +139,28 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
   ),
 };
 // clang-format on
+
+// Prevent QMK's built-in AML task from managing the mouse layer — we handle
+// activation in pointing_device_task_combined_keymap and deactivation in
+// process_record_keymap.  POINTING_DEVICE_AUTO_MOUSE_ENABLE is still defined
+// so the OLED can read get_auto_mouse_enable() for its status display.
+bool auto_mouse_activation(report_mouse_t mouse_report) {
+    return false;
+}
+
+// Green on base layer, red on mouse layer so it's obvious which mode is active.
+bool rgb_matrix_indicators_advanced_user(uint8_t led_min, uint8_t led_max) {
+    uint8_t r, g, b;
+    if (layer_state_is(MOUSE_LAYER)) {
+        r = 255; g = 0;   b = 0;
+    } else {
+        r = 0;   g = 200; b = 0;
+    }
+    for (uint8_t i = led_min; i < led_max; i++) {
+        rgb_matrix_set_color(i, r, g, b);
+    }
+    return false;
+}
 
 layer_state_t layer_state_set_user(layer_state_t state) {
     hk_set_dragscroll_both(get_highest_layer(state) == 3);

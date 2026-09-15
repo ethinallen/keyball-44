@@ -10,14 +10,19 @@ for daily use on macOS with Japanese IME (JIS-style thumb keys, English key layo
   once accumulated movement exceeds a configurable threshold (default 10 units,
   matching QMK's `AUTO_MOUSE_THRESHOLD`). Exits cleanly when any regular key is
   pressed. A dedicated `EXIT` key leaves the layer silently with no spurious character.
-- **Adjustable scroll throttle** — Linear hires-scroll divisor, default 40 (~8×
-  slower than holykeebs factory default of 5). Tunable live on Layer 3 without
-  reflashing.
-- **Correct axis orientation** — Fixes the sensor rotation for Keyball44 (different
+- **RGB layer indicator** — keyboard glows green on the base layer and red on the
+  mouse layer so it's always obvious which mode is active.
+- **Sniping on the mouse layer** — SNPT (toggle) and SNIP (hold) are available
+  directly on Layer 1 so precise cursor positioning works without activating drag scroll.
+- **Soft scroll compression** — tames macOS scroll acceleration on fast trackball
+  flicks while leaving slow/medium scrolling unchanged. Tunable via `SCROLL_CLAMP_*`.
+- **Adjustable scroll throttle** — linear hires-scroll divisor, default 40 (~8×
+  slower than holykeebs factory default of 5). Tunable live on Layer 3 without reflashing.
+- **Correct axis orientation** — fixes the sensor rotation for Keyball44 (different
   from the keyball61plus the holykeebs userspace defaults to).
-- **RGB Matrix** — Full RGB control keycodes on Layer 3.
-- **OLED support** — Bongocat animation, AML on/off status, pointer state display.
-- **VIA/Remap compatible** — Upload `via.json` from the holykeebs firmware tree to
+- **RGB Matrix** — full RGB control keycodes on Layer 3.
+- **OLED support** — bongocat animation, AML on/off status, pointer state display.
+- **VIA/Remap compatible** — upload `via.json` from the holykeebs firmware tree to
   Remap for live keymap editing.
 
 ## Layer Overview
@@ -53,7 +58,7 @@ Dual-role thumb keys (tap · hold):
 ├──────┼─────┼─────┼─────┼─────┼─────┤   ├─────┼─────┼─────┼─────┼─────┼──────┤
 │ ___  │ ___ │ ___ │  ↑  │ ENT │ DEL │   │PGUP │ LMB │  ↑  │ RMB │ MMB │ F12  │
 ├──────┼─────┼─────┼─────┼─────┼─────┤   ├─────┼─────┼─────┼─────┼─────┼──────┤
-│ ___  │ ___ │  ←  │  ↓  │  →  │ BSP │   │PGDN │  ←  │  ↓  │  →  │ ___ │ ___  │
+│ ___  │ ___ │  ←  │  ↓  │  →  │ BSP │   │PGDN │  ←  │  ↓  │  →  │SNPT │SNIP  │
 └──────┴─────┴─────┴─────┴─────┴─────┘   └─────┴─────┴─────┴─────┴─────┴──────┘
 ┌─────┬─────┬─────┬──────┬─────┐           ┌─────┬─────┬─────┬─────┬─────┐
 │ ___ │ ___ │ ___ │ EXIT │ ___ │           │ ___ │ ___ │ ___ │ ___ │ ___ │
@@ -61,11 +66,14 @@ Dual-role thumb keys (tap · hold):
 ```
 
 - Auto-activates when accumulated trackball movement exceeds threshold (default 10 units)
+- Keyboard glows **red** while this layer is active; **green** on all other layers
 - `EXIT` (left inner thumb) — leave mouse layer without sending any character
 - ESC and TAB fall through to base layer — pressing ESC actually sends ESC
 - Left arrow cluster (D/X/C/V) — cursor keys for text navigation while on mouse layer
 - Right side (J/K/L/;/M/,/.) — mouse buttons + mirrored cursor keys
-- Arrow keys, page up/down, F1–F12, enter, delete, backspace keep the layer active
+- `SNPT` (/ position) — toggle sniping mode on/off for precise cursor positioning
+- `SNIP` (¥ position) — hold to enter sniping mode, releases when finger lifts
+- Arrow keys, page up/down, F1–F12, enter, delete, backspace, and sniping keys keep the layer active
 - Any other key press exits the layer automatically
 
 ### Layer 2 — Symbols / Numpad *(hold ENT)*
@@ -110,7 +118,7 @@ are JIS-specific and depend on your macOS keyboard layout setting.
 | MTOG | Toggle auto-mouse layer on/off |
 | AML± | Auto-mouse layer timeout ±50ms |
 | BNGO | Toggle bongocat OLED animation |
-| SNIP / SNPT | Enter / toggle sniping mode (reduced sensitivity) |
+| SNIP / SNPT | Enter / toggle sniping mode (reduced sensitivity). Also available on Layer 1 for use without activating drag scroll. |
 | DRAG / DRGT | Enter / toggle drag-scroll mode |
 | CSRL | Cycle scroll lock: off → horizontal-only → vertical-only → off |
 | ISRL | Invert scroll direction |
@@ -124,6 +132,10 @@ are JIS-specific and depend on your macOS keyboard layout setting.
 > **Drag scroll** is always active while Layer 3 is held — you don't need
 > DRAG/DRGT for a one-off scroll session. Use DRGT to leave it on permanently.
 
+> **Sniping on Layer 3** activates drag scroll at the same time (Layer 3 forces
+> drag scroll). Use the SNPT/SNIP keys on **Layer 1** instead when you want
+> precise cursor movement without scrolling.
+
 > **Adjusting THRO/SENS/SNPS:** hold the key, tap ↑ (F) or ↓ (V) on the left
 > side, then press SAVE (¥, bottom-right) while still holding かな to persist.
 
@@ -136,6 +148,8 @@ Key build-time options in `config.h`:
 | `MOUSE_LAYER_THRESHOLD` | `10` | Accumulated movement required to activate the mouse layer. Raise if the layer triggers during typing; lower if it feels slow to activate. |
 | `HK_MAIN_DEFAULT_POINTER_SCROLL_THROTTLE` | `40` | Default scroll speed divisor. Higher = slower. Adjustable live via THRO on Layer 3. |
 | `HK_PERIPHERAL_DEFAULT_POINTER_SCROLL_THROTTLE` | `40` | Same for the peripheral (left) half. |
+| `SCROLL_CLAMP_THRESHOLD` | `5` | Hires scroll values at or below this pass through unchanged. Above it, excess is compressed by the divisor. |
+| `SCROLL_CLAMP_DIVISOR` | `4` | Divisor applied to scroll values above the threshold. Higher = more compression on fast flicks. |
 
 ## Prerequisites
 

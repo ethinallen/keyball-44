@@ -21,6 +21,19 @@
 #define POINTING_DEVICE_AUTO_MOUSE_ENABLE
 #define AUTO_MOUSE_DEFAULT_LAYER 1
 
+// Soft scroll compression: hires scroll values (120 = 1 line) below
+// SCROLL_CLAMP_THRESHOLD pass through unchanged.  Above the threshold the
+// excess is divided by SCROLL_CLAMP_DIVISOR, so fast flicks are still faster
+// than slow scrolling — just not insanely fast.
+//
+// Example at threshold=5, divisor=4:
+//   input  5 →  5  (unchanged, slow scroll)
+//   input 10 →  6  (5 + 5/4)
+//   input 25 → 10  (5 + 20/4)
+//   input 50 → 16  (5 + 45/4)
+#define SCROLL_CLAMP_THRESHOLD 5
+#define SCROLL_CLAMP_DIVISOR   4
+
 // Minimum total mouse movement (x or y) required to activate the mouse layer.
 // Matches QMK's AUTO_MOUSE_THRESHOLD default of 10.  Raise this value if the
 // mouse layer triggers during typing from vibration; lower it if it feels slow
