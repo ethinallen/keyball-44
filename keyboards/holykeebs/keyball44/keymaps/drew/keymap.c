@@ -133,8 +133,8 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
   // MSE_TOG toggles auto-mouse-layer on/off (replaces HK_AML_T).
   [3] = LAYOUT_universal(
     RM_TOGG  , MSE_TOG  , HK_AML_UP, HK_AML_DN, _______  , HK_BONGO_T,                                       HK_DUMP  , RM_SPDU  , RM_SPDD  , _______  , _______  , _______  ,
-    RM_NEXT  , RM_HUEU  , RM_SATU  , RM_VALU  , KC_UP    , HK_S_MODE ,                                       HK_P_SET_D, HK_P_SET_S, HK_P_SET_THR, _______, _______  , _______  ,
-    RM_PREV  , RM_HUED  , RM_SATD  , RM_VALD  , KC_DOWN  , HK_S_MODE_T,                                      HK_D_MODE, HK_D_MODE_T, HK_C_SCROLL, HK_I_SCROLL, _______  , HK_SAVE  ,
+    _______  , _______  , _______  , RM_VALU  , KC_UP    , HK_S_MODE ,                                       HK_P_SET_D, HK_P_SET_S, HK_P_SET_THR, _______, _______  , _______  ,
+    _______  , _______  , _______  , RM_VALD  , KC_DOWN  , HK_S_MODE_T,                                      HK_D_MODE, HK_D_MODE_T, HK_C_SCROLL, HK_I_SCROLL, _______  , HK_SAVE  ,
                   QK_BOOT  , HK_RESET , _______  ,        _______  , _______  ,                   _______  , _______  , _______       , HK_RESET , QK_BOOT
   ),
 };
@@ -148,16 +148,14 @@ bool auto_mouse_activation(report_mouse_t mouse_report) {
     return false;
 }
 
-// Green on base layer, red on mouse layer so it's obvious which mode is active.
+// Red on mouse layer, green otherwise.  Both scale with the RGB brightness
+// setting (RM_VALU/RM_VALD on Layer 3) so the indicator respects dim/bright.
 bool rgb_matrix_indicators_advanced_user(uint8_t led_min, uint8_t led_max) {
-    uint8_t r, g, b;
-    if (layer_state_is(MOUSE_LAYER)) {
-        r = 255; g = 0;   b = 0;
-    } else {
-        r = 0;   g = 200; b = 0;
-    }
+    uint8_t val = rgb_matrix_get_val();
+    uint8_t r   = layer_state_is(MOUSE_LAYER) ? val : 0;
+    uint8_t g   = layer_state_is(MOUSE_LAYER) ? 0   : val;
     for (uint8_t i = led_min; i < led_max; i++) {
-        rgb_matrix_set_color(i, r, g, b);
+        rgb_matrix_set_color(i, r, g, 0);
     }
     return false;
 }

@@ -100,9 +100,9 @@ are JIS-specific and depend on your macOS keyboard layout setting.
 ┌──────┬──────┬──────┬──────┬──────┬──────┐   ┌──────┬──────┬──────┬─────┬─────┬──────┐
 │ RTOG │ MTOG │ AML+ │ AML- │ ___  │ BNGO │   │ DUMP │ SPD+ │ SPD- │ ___ │ ___ │ ___  │
 ├──────┼──────┼──────┼──────┼──────┼──────┤   ├──────┼──────┼──────┼─────┼─────┼──────┤
-│ RNXT │ HUE+ │ SAT+ │ BRT+ │  ↑   │ SNIP │   │ SENS │ SNPS │ THRO │ ___ │ ___ │ ___  │
+│ ___  │ ___  │ ___  │ BRT+ │  ↑   │ SNIP │   │ SENS │ SNPS │ THRO │ ___ │ ___ │ ___  │
 ├──────┼──────┼──────┼──────┼──────┼──────┤   ├──────┼──────┼──────┼─────┼─────┼──────┤
-│ RPRV │ HUE- │ SAT- │ BRT- │  ↓   │ SNPT │   │ DRAG │ DRGT │ CSRL │ISRL │ ___ │ SAVE │
+│ ___  │ ___  │ ___  │ BRT- │  ↓   │ SNPT │   │ DRAG │ DRGT │ CSRL │ISRL │ ___ │ SAVE │
 └──────┴──────┴──────┴──────┴──────┴──────┘   └──────┴──────┴──────┴─────┴─────┴──────┘
 ┌──────┬──────┬─────┬─────┬─────┐               ┌─────┬─────┬─────┬──────┬──────┐
 │ BOOT │ RST  │ ___ │ ___ │ ___ │               │ ___ │ ___ │ ___ │ RST  │ BOOT │
@@ -112,8 +112,7 @@ are JIS-specific and depend on your macOS keyboard layout setting.
 | Key  | Function |
 |------|----------|
 | RTOG | Toggle RGB on/off |
-| RNXT / RPRV | Next / previous RGB animation mode |
-| HUE± / SAT± / BRT± | Hue / saturation / brightness |
+| BRT± | Brightness up/down — also scales the green/red layer indicator |
 | SPD± | RGB animation speed |
 | MTOG | Toggle auto-mouse layer on/off |
 | AML± | Auto-mouse layer timeout ±50ms |
