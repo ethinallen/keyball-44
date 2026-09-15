@@ -102,7 +102,7 @@ are JIS-specific and depend on your macOS keyboard layout setting.
 ├──────┼──────┼──────┼──────┼──────┼──────┤   ├──────┼──────┼──────┼─────┼─────┼──────┤
 │ ___  │ ___  │ ___  │ BRT+ │  ↑   │ SNIP │   │ SENS │ SNPS │ THRO │ ___ │ ___ │ ___  │
 ├──────┼──────┼──────┼──────┼──────┼──────┤   ├──────┼──────┼──────┼─────┼─────┼──────┤
-│ ___  │ ___  │ ___  │ BRT- │  ↓   │ SNPT │   │ DRAG │ DRGT │ CSRL │ISRL │ ___ │ SAVE │
+│ ___  │ ___  │ ___  │ BRT- │  ↓   │ SNPT │   │ ___  │ ___  │ CSRL │ISRL │ ___ │ SAVE │
 └──────┴──────┴──────┴──────┴──────┴──────┘   └──────┴──────┴──────┴─────┴─────┴──────┘
 ┌──────┬──────┬─────┬─────┬─────┐               ┌─────┬─────┬─────┬──────┬──────┐
 │ BOOT │ RST  │ ___ │ ___ │ ___ │               │ ___ │ ___ │ ___ │ RST  │ BOOT │
@@ -118,7 +118,6 @@ are JIS-specific and depend on your macOS keyboard layout setting.
 | AML± | Auto-mouse layer timeout ±50ms |
 | BNGO | Toggle bongocat OLED animation |
 | SNIP / SNPT | Enter / toggle sniping mode (reduced sensitivity). Also available on Layer 1 for use without activating drag scroll. |
-| DRAG / DRGT | Enter / toggle drag-scroll mode |
 | CSRL | Cycle scroll lock: off → horizontal-only → vertical-only → off |
 | ISRL | Invert scroll direction |
 | SENS | Hold + tap ↑/↓ to adjust default pointer sensitivity |
@@ -128,8 +127,9 @@ are JIS-specific and depend on your macOS keyboard layout setting.
 | RST  | Reset HK settings to firmware defaults |
 | BOOT | Enter bootloader (keyboard appears as RPI-RP2 drive) |
 
-> **Drag scroll** is always active while Layer 3 is held — you don't need
-> DRAG/DRGT for a one-off scroll session. Use DRGT to leave it on permanently.
+> **Drag scroll** is always active while Layer 3 is held and turns off automatically
+> when you release it. There is no permanent drag-scroll toggle — this is intentional
+> to prevent it from being accidentally saved to EEPROM.
 
 > **Sniping on Layer 3** activates drag scroll at the same time (Layer 3 forces
 > drag scroll). Use the SNPT/SNIP keys on **Layer 1** instead when you want

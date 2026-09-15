@@ -70,7 +70,7 @@ static bool is_mouse_or_pass_key(uint16_t keycode) {
     // Navigation / editing keys explicitly mapped on Layer 1
     if (keycode == KC_UP || keycode == KC_DOWN || keycode == KC_LEFT || keycode == KC_RIGHT) return true;
     if (keycode == KC_PGUP || keycode == KC_PGDN) return true;
-    if (keycode == KC_ENT  || keycode == KC_DEL  || keycode == KC_BSPC) return true;
+    if (keycode == KC_ENT  || keycode == KC_DEL) return true;
     // Function keys mapped on Layer 1 row 1
     if (keycode >= KC_F1 && keycode <= KC_F12) return true;
     return false;
@@ -134,7 +134,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
   [3] = LAYOUT_universal(
     RM_TOGG  , MSE_TOG  , HK_AML_UP, HK_AML_DN, _______  , HK_BONGO_T,                                       HK_DUMP  , RM_SPDU  , RM_SPDD  , _______  , _______  , _______  ,
     _______  , _______  , _______  , RM_VALU  , KC_UP    , HK_S_MODE ,                                       HK_P_SET_D, HK_P_SET_S, HK_P_SET_THR, _______, _______  , _______  ,
-    _______  , _______  , _______  , RM_VALD  , KC_DOWN  , HK_S_MODE_T,                                      HK_D_MODE, HK_D_MODE_T, HK_C_SCROLL, HK_I_SCROLL, _______  , HK_SAVE  ,
+    _______  , _______  , _______  , RM_VALD  , KC_DOWN  , HK_S_MODE_T,                                      _______  , _______  , HK_C_SCROLL, HK_I_SCROLL, _______  , HK_SAVE  ,
                   QK_BOOT  , HK_RESET , _______  ,        _______  , _______  ,                   _______  , _______  , _______       , HK_RESET , QK_BOOT
   ),
 };
@@ -163,4 +163,11 @@ bool rgb_matrix_indicators_advanced_user(uint8_t led_min, uint8_t led_max) {
 layer_state_t layer_state_set_user(layer_state_t state) {
     hk_set_dragscroll_both(get_highest_layer(state) == 3);
     return state;
+}
+
+// Called by holykeebs after EEPROM is loaded.  Drag scroll may have been saved
+// as enabled (e.g. via HK_D_MODE_T); reset it here so the layer-managed
+// behaviour in layer_state_set_user is always authoritative at boot.
+void keyboard_post_init_keymap(void) {
+    hk_set_dragscroll_both(false);
 }
