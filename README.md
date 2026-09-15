@@ -6,9 +6,10 @@ for daily use on macOS with Japanese IME (JIS-style thumb keys, English key layo
 
 ## Features
 
-- **Auto-mouse layer** — Layer 1 activates automatically on trackball movement and
-  exits cleanly when any regular key is pressed. A dedicated `MSE_OFF` key exits the
-  layer silently (no spurious character sent).
+- **Auto-mouse layer** — Layer 1 activates automatically on trackball movement
+  once accumulated movement exceeds a configurable threshold (default 10 units,
+  matching QMK's `AUTO_MOUSE_THRESHOLD`). Exits cleanly when any regular key is
+  pressed. A dedicated `EXIT` key leaves the layer silently with no spurious character.
 - **Adjustable scroll throttle** — Linear hires-scroll divisor, default 40 (~8×
   slower than holykeebs factory default of 5). Tunable live on Layer 3 without
   reflashing.
@@ -41,6 +42,8 @@ Dual-role thumb keys (tap · hold):
 - `SPC·L1` — tap = Space, hold = Layer 1 (Mouse)
 - `かな·L3` — tap = かな (Japanese input), hold = Layer 3 (Settings)
 - `ENT·L2` — tap = Enter, hold = Layer 2 (Symbols)
+- `'` = S(KC_7) — apostrophe on JIS, `&` on US layout
+- `¥` = INT1 key — yen/backslash
 
 ### Layer 1 — Mouse *(auto-activates on trackball movement)*
 
@@ -57,10 +60,13 @@ Dual-role thumb keys (tap · hold):
 └─────┴─────┴─────┴──────┴─────┘           └─────┴─────┴─────┴─────┴─────┘
 ```
 
+- Auto-activates when accumulated trackball movement exceeds threshold (default 10 units)
 - `EXIT` (left inner thumb) — leave mouse layer without sending any character
-- Left arrow cluster (D/X/C/V) — cursor keys for text navigation
+- ESC and TAB fall through to base layer — pressing ESC actually sends ESC
+- Left arrow cluster (D/X/C/V) — cursor keys for text navigation while on mouse layer
 - Right side (J/K/L/;/M/,/.) — mouse buttons + mirrored cursor keys
-- Any regular key press exits the layer automatically
+- Arrow keys, page up/down, F1–F12, enter, delete, backspace keep the layer active
+- Any other key press exits the layer automatically
 
 ### Layer 2 — Symbols / Numpad *(hold ENT)*
 
@@ -78,7 +84,7 @@ Dual-role thumb keys (tap · hold):
 ```
 
 Numpad (1–9, 0, .) on the left; symbols on the right. Some symbols (‡, ¥\\)
-depend on your macOS keyboard layout setting (Japanese vs US).
+are JIS-specific and depend on your macOS keyboard layout setting.
 
 ### Layer 3 — Settings *(hold かな — drag scroll active while held)*
 
@@ -88,7 +94,7 @@ depend on your macOS keyboard layout setting (Japanese vs US).
 ├──────┼──────┼──────┼──────┼──────┼──────┤   ├──────┼──────┼──────┼─────┼─────┼──────┤
 │ RNXT │ HUE+ │ SAT+ │ BRT+ │  ↑   │ SNIP │   │ SENS │ SNPS │ THRO │ ___ │ ___ │ ___  │
 ├──────┼──────┼──────┼──────┼──────┼──────┤   ├──────┼──────┼──────┼─────┼─────┼──────┤
-│ RPRV │ HUE- │ SAT- │ BRT- │  ↓   │ SNPT │   │ DRAG │ DRGT │ ___  │ ___ │ ___ │ SAVE │
+│ RPRV │ HUE- │ SAT- │ BRT- │  ↓   │ SNPT │   │ DRAG │ DRGT │ CSRL │ISRL │ ___ │ SAVE │
 └──────┴──────┴──────┴──────┴──────┴──────┘   └──────┴──────┴──────┴─────┴─────┴──────┘
 ┌──────┬──────┬─────┬─────┬─────┐               ┌─────┬─────┬─────┬──────┬──────┐
 │ BOOT │ RST  │ ___ │ ___ │ ___ │               │ ___ │ ___ │ ___ │ RST  │ BOOT │
@@ -106,18 +112,30 @@ depend on your macOS keyboard layout setting (Japanese vs US).
 | BNGO | Toggle bongocat OLED animation |
 | SNIP / SNPT | Enter / toggle sniping mode (reduced sensitivity) |
 | DRAG / DRGT | Enter / toggle drag-scroll mode |
+| CSRL | Cycle scroll lock: off → horizontal-only → vertical-only → off |
+| ISRL | Invert scroll direction |
 | SENS | Hold + tap ↑/↓ to adjust default pointer sensitivity |
 | SNPS | Hold + tap ↑/↓ to adjust sniping sensitivity |
 | THRO | Hold + tap ↑/↓ to adjust scroll throttle (↑ = slower) |
-| SAVE | Write all settings to EEPROM |
+| SAVE | Write all settings to EEPROM (¥ key, bottom-right corner) |
 | RST  | Reset HK settings to firmware defaults |
 | BOOT | Enter bootloader (keyboard appears as RPI-RP2 drive) |
 
-> **Tip:** Drag scroll is always active while Layer 3 is held — you don't need
+> **Drag scroll** is always active while Layer 3 is held — you don't need
 > DRAG/DRGT for a one-off scroll session. Use DRGT to leave it on permanently.
 
-> **Tip:** After adjusting THRO/SENS/SNPS, press SAVE (¥ key, bottom-right corner)
-> while still holding かな to persist across power cycles.
+> **Adjusting THRO/SENS/SNPS:** hold the key, tap ↑ (F) or ↓ (V) on the left
+> side, then press SAVE (¥, bottom-right) while still holding かな to persist.
+
+## Configuration
+
+Key build-time options in `config.h`:
+
+| Define | Default | Description |
+|--------|---------|-------------|
+| `MOUSE_LAYER_THRESHOLD` | `10` | Accumulated movement required to activate the mouse layer. Raise if the layer triggers during typing; lower if it feels slow to activate. |
+| `HK_MAIN_DEFAULT_POINTER_SCROLL_THROTTLE` | `40` | Default scroll speed divisor. Higher = slower. Adjustable live via THRO on Layer 3. |
+| `HK_PERIPHERAL_DEFAULT_POINTER_SCROLL_THROTTLE` | `40` | Same for the peripheral (left) half. |
 
 ## Prerequisites
 
@@ -151,14 +169,6 @@ The `.uf2` file will be at `.build/holykeebs_keyball44_drew.uf2`.
 2. `cp .build/holykeebs_keyball44_drew.uf2 /Volumes/RPI-RP2/`
 3. Repeat for the other half
 4. Flash the right half (master/USB side) first
-
-## Scroll Speed
-
-Default scroll throttle is 40. To adjust live:
-
-1. Hold **かな** (Layer 3)
-2. Hold **K** (THRO) and tap **F** (↑ = slower) or **V** (↓ = faster)
-3. Press **¥** (SAVE, bottom-right corner) while still holding かな
 
 ## Credits
 

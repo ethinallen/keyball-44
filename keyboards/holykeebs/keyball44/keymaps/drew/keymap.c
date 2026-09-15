@@ -16,11 +16,22 @@ enum custom_keycodes {
 // Whether auto-mouse-layer is enabled.  Starts on; toggled by MSE_TOG.
 static bool mouse_layer_enabled = true;
 
+// Accumulated movement counters for threshold gating.
+static int16_t mouse_accu_x = 0;
+static int16_t mouse_accu_y = 0;
+
 // Called by the holykeebs userspace after it processes the combined mouse
-// report.  We use it to activate the mouse layer on ball movement.
+// report.  We accumulate movement and only activate the mouse layer once the
+// total exceeds MOUSE_LAYER_THRESHOLD, matching QMK's AML behaviour.
 report_mouse_t pointing_device_task_combined_keymap(report_mouse_t report) {
-    if (mouse_layer_enabled && (report.x != 0 || report.y != 0)) {
-        layer_on(MOUSE_LAYER);
+    if (mouse_layer_enabled) {
+        mouse_accu_x += report.x;
+        mouse_accu_y += report.y;
+        if (abs(mouse_accu_x) > MOUSE_LAYER_THRESHOLD || abs(mouse_accu_y) > MOUSE_LAYER_THRESHOLD) {
+            layer_on(MOUSE_LAYER);
+            mouse_accu_x = 0;
+            mouse_accu_y = 0;
+        }
     }
     return report;
 }
@@ -53,6 +64,8 @@ bool process_record_keymap(uint16_t keycode, keyrecord_t *record) {
         case MSE_OFF:
             if (record->event.pressed) {
                 layer_off(MOUSE_LAYER);
+                mouse_accu_x = 0;
+                mouse_accu_y = 0;
             }
             return false;
 
@@ -61,6 +74,8 @@ bool process_record_keymap(uint16_t keycode, keyrecord_t *record) {
                 mouse_layer_enabled = !mouse_layer_enabled;
                 set_auto_mouse_enable(mouse_layer_enabled);
                 if (!mouse_layer_enabled) layer_off(MOUSE_LAYER);
+                mouse_accu_x = 0;
+                mouse_accu_y = 0;
             }
             return false;
     }
@@ -102,7 +117,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
   [3] = LAYOUT_universal(
     RM_TOGG  , MSE_TOG  , HK_AML_UP, HK_AML_DN, _______  , HK_BONGO_T,                                       HK_DUMP  , RM_SPDU  , RM_SPDD  , _______  , _______  , _______  ,
     RM_NEXT  , RM_HUEU  , RM_SATU  , RM_VALU  , KC_UP    , HK_S_MODE ,                                       HK_P_SET_D, HK_P_SET_S, HK_P_SET_THR, _______, _______  , _______  ,
-    RM_PREV  , RM_HUED  , RM_SATD  , RM_VALD  , KC_DOWN  , HK_S_MODE_T,                                      HK_D_MODE, HK_D_MODE_T, _______ , _______  , _______  , HK_SAVE  ,
+    RM_PREV  , RM_HUED  , RM_SATD  , RM_VALD  , KC_DOWN  , HK_S_MODE_T,                                      HK_D_MODE, HK_D_MODE_T, HK_C_SCROLL, HK_I_SCROLL, _______  , HK_SAVE  ,
                   QK_BOOT  , HK_RESET , _______  ,        _______  , _______  ,                   _______  , _______  , _______       , HK_RESET , QK_BOOT
   ),
 };

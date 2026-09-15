@@ -21,6 +21,12 @@
 #define POINTING_DEVICE_AUTO_MOUSE_ENABLE
 #define AUTO_MOUSE_DEFAULT_LAYER 1
 
+// Minimum total mouse movement (x or y) required to activate the mouse layer.
+// Matches QMK's AUTO_MOUSE_THRESHOLD default of 10.  Raise this value if the
+// mouse layer triggers during typing from vibration; lower it if it feels slow
+// to activate when you intentionally move the ball.
+#define MOUSE_LAYER_THRESHOLD 10
+
 // The userspace config.h applies ROTATION_270_RIGHT + INVERT_Y_RIGHT, which
 // was calibrated for keyball61plus.  For keyball44 the sensor is mounted with
 // a different orientation; the correct mapping is (sensor_y, sensor_x) for the
