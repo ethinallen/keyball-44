@@ -148,14 +148,16 @@ bool auto_mouse_activation(report_mouse_t mouse_report) {
     return false;
 }
 
-// Red on mouse layer, green otherwise.  Both scale with the RGB brightness
+// Yellow on mouse layer, blue otherwise.  Both scale with the RGB brightness
 // setting (RM_VALU/RM_VALD on Layer 3) so the indicator respects dim/bright.
+// Blue/yellow is colorblind-safe (red/green is not).
 bool rgb_matrix_indicators_advanced_user(uint8_t led_min, uint8_t led_max) {
     uint8_t val = rgb_matrix_get_val();
     uint8_t r   = layer_state_is(MOUSE_LAYER) ? val : 0;
-    uint8_t g   = layer_state_is(MOUSE_LAYER) ? 0   : val;
+    uint8_t g   = layer_state_is(MOUSE_LAYER) ? val : 0;
+    uint8_t b   = layer_state_is(MOUSE_LAYER) ? 0   : val;
     for (uint8_t i = led_min; i < led_max; i++) {
-        rgb_matrix_set_color(i, r, g, 0);
+        rgb_matrix_set_color(i, r, g, b);
     }
     return false;
 }

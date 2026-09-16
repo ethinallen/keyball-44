@@ -10,8 +10,8 @@ for daily use on macOS with Japanese IME (JIS-style thumb keys, English key layo
   once accumulated movement exceeds a configurable threshold (default 10 units,
   matching QMK's `AUTO_MOUSE_THRESHOLD`). Exits cleanly when any regular key is
   pressed. A dedicated `EXIT` key leaves the layer silently with no spurious character.
-- **RGB layer indicator** — keyboard glows green on the base layer and red on the
-  mouse layer so it's always obvious which mode is active.
+- **RGB layer indicator** — keyboard glows blue on the base layer and yellow on the
+  mouse layer. Blue/yellow is colorblind-safe unlike red/green.
 - **Sniping on the mouse layer** — SNPT (toggle) and SNIP (hold) are available
   directly on Layer 1 so precise cursor positioning works without activating drag scroll.
 - **Soft scroll compression** — tames macOS scroll acceleration on fast trackball
@@ -66,7 +66,7 @@ Dual-role thumb keys (tap · hold):
 ```
 
 - Auto-activates when accumulated trackball movement exceeds threshold (default 10 units)
-- Keyboard glows **red** while this layer is active; **green** on all other layers
+- Keyboard glows **yellow** while this layer is active; **blue** on all other layers
 - `EXIT` (left inner thumb) — leave mouse layer without sending any character
 - ESC and TAB fall through to base layer — pressing ESC actually sends ESC
 - Left arrow cluster (D/X/C/V) — cursor keys for text navigation while on mouse layer
