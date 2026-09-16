@@ -73,7 +73,7 @@ Dual-role thumb keys (tap · hold):
 - Right side (J/K/L/;/M/,/.) — mouse buttons + mirrored cursor keys
 - `SNPT` (/ position) — toggle sniping mode on/off for precise cursor positioning
 - `SNIP` (¥ position) — hold to enter sniping mode, releases when finger lifts
-- Arrow keys, page up/down, F1–F12, enter, delete, backspace, and sniping keys keep the layer active
+- Arrow keys, page up/down, F1–F12, enter, delete, and sniping keys keep the layer active
 - Any other key press exits the layer automatically
 
 ### Layer 2 — Symbols / Numpad *(hold ENT)*
@@ -112,7 +112,7 @@ are JIS-specific and depend on your macOS keyboard layout setting.
 | Key  | Function |
 |------|----------|
 | RTOG | Toggle RGB on/off |
-| BRT± | Brightness up/down — also scales the green/red layer indicator |
+| BRT± | Brightness up/down — also scales the blue/yellow layer indicator |
 | SPD± | RGB animation speed |
 | MTOG | Toggle auto-mouse layer on/off |
 | AML± | Auto-mouse layer timeout ±50ms |
