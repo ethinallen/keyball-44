@@ -57,6 +57,9 @@ static bool is_mouse_or_pass_key(uint16_t keycode) {
     if (keycode >= MS_BTN1 && keycode <= MS_BTN8) return true;
     // Modifier keys (Shift, Ctrl, Alt, GUI)
     if (keycode >= KC_LEFT_CTRL && keycode <= KC_RIGHT_GUI) return true;
+    // Mod-tap keys (LGUI_T, LCTL_T, etc.) — pass through so they don't exit
+    // the mouse layer before QMK resolves tap vs hold
+    if (keycode >= QK_MOD_TAP && keycode <= QK_MOD_TAP_MAX) return true;
     // Layer keys (MO, LT, TO, TG, ...)
     if ((keycode >= QK_MOMENTARY        && keycode <= QK_MOMENTARY_MAX)  ||
         (keycode >= QK_LAYER_TAP        && keycode <= QK_LAYER_TAP_MAX)  ||
@@ -110,7 +113,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
     KC_ESC   , KC_Q     , KC_W     , KC_E     , KC_R     , KC_T     ,                                        KC_Y     , KC_U     , KC_I     , KC_O     , KC_P     , KC_DEL   ,
     KC_TAB   , KC_A     , KC_S     , KC_D     , KC_F     , KC_G     ,                                        KC_H     , KC_J     , KC_K     , KC_L     , KC_SCLN  , S(KC_7)  ,
     KC_LSFT  , KC_Z     , KC_X     , KC_C     , KC_V     , KC_B     ,                                        KC_N     , KC_M     , KC_COMM  , KC_DOT   , KC_SLSH  , KC_INT1  ,
-              KC_LALT,KC_LGUI,LCTL_T(KC_LNG2)     ,LT(1,KC_SPC),LT(3,KC_LNG1),                  KC_BSPC,LT(2,KC_ENT), RCTL_T(KC_LNG2),     KC_RALT  , KC_PSCR
+              LGUI_T(KC_LALT),KC_LGUI,LCTL_T(KC_LNG2),LT(1,KC_SPC),LT(3,KC_LNG1),                  KC_BSPC,LT(2,KC_ENT), RCTL_T(KC_LNG2),     KC_RALT  , KC_PSCR
   ),
 
   // Mouse layer: activates automatically on ball movement, exits on any
@@ -119,7 +122,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
     _______     ,  KC_F1   , KC_F2    , KC_F3   , KC_F4    , KC_F5    ,                                         KC_F6    , KC_F7    , KC_F8    , KC_F9    , KC_F10   , KC_F11   ,
     _______     ,  _______ , _______  , KC_UP   , KC_ENT   , KC_DEL   ,                                         KC_PGUP  , MS_BTN1  , KC_UP    , MS_BTN2  , MS_BTN3  , KC_F12   ,
     _______     ,  _______ , KC_LEFT  , KC_DOWN , KC_RGHT  , KC_BSPC  ,                                         KC_PGDN  , KC_LEFT  , KC_DOWN  , KC_RGHT  , HK_S_MODE_T, HK_S_MODE,
-                  _______  , _______  , _______  ,         MSE_OFF  , _______  ,                   _______  , _______  , _______       , _______  , _______
+                  _______  , _______  , _______  ,   LT(1,MSE_OFF) , _______  ,                   _______  , _______  , _______       , _______  , _______
   ),
 
   [2] = LAYOUT_universal(

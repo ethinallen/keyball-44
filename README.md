@@ -37,12 +37,13 @@ for daily use on macOS with Japanese IME (JIS-style thumb keys, English key layo
 ├──────┼─────┼─────┼─────┼─────┼─────┤   ├─────┼─────┼─────┼─────┼─────┼──────┤
 │ SFT  │  Z  │  X  │  C  │  V  │  B  │   │  N  │  M  │  ,  │  .  │  /  │  ¥   │
 └──────┴─────┴─────┴─────┴─────┴─────┘   └─────┴─────┴─────┴─────┴─────┴──────┘
-┌─────┬─────┬─────────┬────────┬─────────┐  ┌──────┬────────┬─────────┬──────┬──────┐
-│ ALT │ CMD │ 英·CTL  │ SPC·L1 │ かな·L3 │  │ BSP  │ ENT·L2 │  英·CTL │ RALT │ PSCR │
-└─────┴─────┴─────────┴────────┴─────────┘  └──────┴────────┴─────────┴──────┴──────┘
+┌─────────┬─────┬─────────┬────────┬─────────┐  ┌──────┬────────┬─────────┬──────┬──────┐
+│ ALT·CMD │ CMD │ 英·CTL  │ SPC·L1 │ かな·L3 │  │ BSP  │ ENT·L2 │  英·CTL │ RALT │ PSCR │
+└─────────┴─────┴─────────┴────────┴─────────┘  └──────┴────────┴─────────┴──────┴──────┘
 ```
 
 Dual-role thumb keys (tap · hold):
+- `ALT·CMD` — tap = Alt (英数 alt-codes), hold = Cmd (for Cmd+1/T/W/etc.)
 - `英·CTL` — tap = 英数 (ASCII input), hold = Ctrl
 - `SPC·L1` — tap = Space, hold = Layer 1 (Mouse)
 - `かな·L3` — tap = かな (Japanese input), hold = Layer 3 (Settings)
@@ -60,14 +61,14 @@ Dual-role thumb keys (tap · hold):
 ├──────┼─────┼─────┼─────┼─────┼─────┤   ├─────┼─────┼─────┼─────┼─────┼──────┤
 │ ___  │ ___ │  ←  │  ↓  │  →  │ BSP │   │PGDN │  ←  │  ↓  │  →  │SNPT │SNIP  │
 └──────┴─────┴─────┴─────┴─────┴─────┘   └─────┴─────┴─────┴─────┴─────┴──────┘
-┌─────┬─────┬─────┬──────┬─────┐           ┌─────┬─────┬─────┬─────┬─────┐
-│ ___ │ ___ │ ___ │ EXIT │ ___ │           │ ___ │ ___ │ ___ │ ___ │ ___ │
-└─────┴─────┴─────┴──────┴─────┘           └─────┴─────┴─────┴─────┴─────┘
+┌─────┬─────┬─────┬────────┬─────┐           ┌─────┬─────┬─────┬─────┬─────┐
+│ ___ │ ___ │ ___ │ EXT·L1 │ ___ │           │ ___ │ ___ │ ___ │ ___ │ ___ │
+└─────┴─────┴─────┴────────┴─────┘           └─────┴─────┴─────┴─────┴─────┘
 ```
 
 - Auto-activates when accumulated trackball movement exceeds threshold (default 10 units)
 - Keyboard glows **yellow** while this layer is active; **blue** on all other layers
-- `EXIT` (left inner thumb) — leave mouse layer without sending any character
+- `EXT·L1` (left inner thumb) — tap = leave mouse layer silently; hold = keep mouse layer active
 - ESC and TAB fall through to base layer — pressing ESC actually sends ESC
 - Left arrow cluster (D/X/C/V) — cursor keys for text navigation while on mouse layer
 - Right side (J/K/L/;/M/,/.) — mouse buttons + mirrored cursor keys

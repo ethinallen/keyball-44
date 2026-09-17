@@ -45,7 +45,7 @@
 // from the compiled layout.  Without this, Remap's stored keymap survives
 // reflashes and can shadow keys that were changed in source (e.g. adding SNPT/SNIP
 // to Layer 1).  Increment by 1 each time you need a forced EEPROM reset.
-#define VIA_FIRMWARE_VERSION 1
+#define VIA_FIRMWARE_VERSION 2
 
 // The userspace config.h applies ROTATION_270_RIGHT + INVERT_Y_RIGHT, which
 // was calibrated for keyball61plus.  For keyball44 the sensor is mounted with
